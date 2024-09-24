@@ -1,8 +1,5 @@
 __version__ = "0.0.1"
-
-#__all__ = ["reattempt"]
-# Set the default callable for the package
-# Expose `reattempt` as the package-level callable
+__all__ = ["reattempt"]
 
 import asyncio
 import contextlib
