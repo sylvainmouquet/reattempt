@@ -1,0 +1,27 @@
+[project]
+name = "reattempt"
+version = "1.0.7"
+description = "Retrying a python function when exceptions are raised"
+authors = [{name = "Sylvain Mouquet", email = "sylvain.mouquet@gmail.com"}]
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+]
+repository = "https://github.com/sylvainmouquet/reattempt"
+
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.uv]
+dev-dependencies = [
+    "pytest-asyncio>=0.24.0",
+    "pytest-mock>=3.14.0",
+    "pytest>=8.3.3",
+    "ruff>=0.6.7",
+    "reattempt>=0.0.1"
+]
+
+[tool.uv.sources]
+reattempt = { path = "reattempt" }
