@@ -4,7 +4,7 @@ version = "0.1.0"
 description = "Retrying a python function when exceptions are raised"
 authors = [{name = "Sylvain Mouquet", email = "sylvain.mouquet@gmail.com"}]
 readme = "README.md"
-requires-python = ">=3.8"
+requires-python = ">=3.9"
 dependencies = []
 
 [build-system]
