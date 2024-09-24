@@ -7,7 +7,27 @@ readme = "README.md"
 requires-python = ">=3.9"
 dependencies = [
 ]
+license = { text = "MIT" }
+url = "https://github.com/sylvainmouquet/reattempt"
+keywords = ["retry", "decorator", "python", "exponential backoff", "exception handling"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+
+[project.urls]
+homepage = "https://github.com/sylvainmouquet/reattempt"
+documentation = "https://github.com/sylvainmouquet/reattempt"
 repository = "https://github.com/sylvainmouquet/reattempt"
+changelog = "https://github.com/sylvainmouquet/reattempt/releases"
 
 
 [build-system]
