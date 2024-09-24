@@ -24,7 +24,7 @@ jobs:
     - name: Install uv
       run: pip install uv
     - name: Use uv with Python version
-      run: uv use ${{ matrix.python-version }}
+      run: uv venv --python ${{ matrix.python-version }}
     - name: Install dependencies
       run: make install
     - name: Run tests
