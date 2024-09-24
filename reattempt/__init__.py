@@ -1,5 +1,11 @@
-__version__ = "0.0.1"
-__all__ = ["reattempt"]
+__version__ = "1.0.6"
+
+
+__all__ = (
+    "__version__",
+    "reattempt",
+)
+
 
 import asyncio
 import contextlib
@@ -17,15 +23,12 @@ logger = logging.getLogger("reattempt")
 logger.addHandler(logging.NullHandler())
 
 
-def __call__(func, max_retries=CONST_DEFAULT_MAX_RETRIES, min_time=CONST_DEFAULT_MIN_TIME, max_time=CONST_DEFAULT_MAX_TIME):
-    return reattempt(func, max_retries, min_time, max_time)
-
 def reattempt(
     func=None,
     max_retries: int = CONST_DEFAULT_MAX_RETRIES,
     min_time: float = CONST_DEFAULT_MIN_TIME,
     max_time: float = CONST_DEFAULT_MAX_TIME,
-):
+) :
     """
     Decorator to retry a function upon failure with exponential backoff.
 
@@ -199,5 +202,4 @@ def reattempt(
         return decorator(func)
     return decorator
 
-import sys
-sys.modules[__name__] = reattempt
+
