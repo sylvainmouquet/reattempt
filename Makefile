@@ -15,7 +15,8 @@ install:
 build: check-version
 	rm -rf dist/* || true
 #	ls -al
-	sed -i 's/^version =.*/version = "${VERSION}"/' pyproject.toml
+	$(sed -i 's/^version =.*/version = "${VERSION}"/' pyproject.toml)
+	$(sed -i 's/^__version__ =.*/__version__ = "${VERSION}"/' src/reattempt/__init__.py)
 	cat pyproject.toml | grep version
 #	@sed -i '' 's/^version =.*/version = "${VERSION}"/' pyproject.toml
 	uv build
@@ -31,6 +32,11 @@ check-version:
 .PHONY: deploy
 deploy:
 	uvx twine upload dist/*
+
+# Install local build command
+.PHONY: install-local
+install-local:
+	pip3 install dist/*.whl
 
 # Test command
 .PHONY: test
@@ -48,10 +54,11 @@ lint:
 .PHONY: help
 help:
 	@echo "Available commands:"
-	@echo "  wip     - Commit and push work in progress"
-	@echo "  install - Install dependencies"
-	@echo "  build   - Build the project"
-	@echo "  deploy  - Deploy the project"
-	@echo "  test    - Run tests"
-	@echo "  lint    - Run linter"
-	@echo "  help    - Display this help message"
+	@echo "  wip           - Commit and push work in progress"
+	@echo "  install       - Install dependencies"
+	@echo "  build         - Build the project"
+	@echo "  deploy        - Deploy the project"
+	@echo "  install-local - Install the build locally"
+	@echo "  test          - Run tests"
+	@echo "  lint          - Run linter"
+	@echo "  help          - Display this help message"

@@ -1,3 +1,9 @@
+__version__ = "0.0.1"
+
+#__all__ = ["reattempt"]
+# Set the default callable for the package
+# Expose `reattempt` as the package-level callable
+
 import asyncio
 import contextlib
 import functools
@@ -13,6 +19,9 @@ CONST_DEFAULT_MAX_TIME: float = 0.2
 logger = logging.getLogger("reattempt")
 logger.addHandler(logging.NullHandler())
 
+
+def __call__(func, max_retries=CONST_DEFAULT_MAX_RETRIES, min_time=CONST_DEFAULT_MIN_TIME, max_time=CONST_DEFAULT_MAX_TIME):
+    return reattempt(func, max_retries, min_time, max_time)
 
 def reattempt(
     func=None,
@@ -193,8 +202,5 @@ def reattempt(
         return decorator(func)
     return decorator
 
-
-__all__ = ["reattempt"]
-
-# Make retry available at the module level
-reattempt = reattempt
+import sys
+sys.modules[__name__] = reattempt
