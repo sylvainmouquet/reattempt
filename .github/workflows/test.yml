@@ -30,6 +30,6 @@ jobs:
     - name: Install dependencies
       run: make install
     - name: Build
-      run: VERSION=test make build
+      run: VERSION=0.0.1 make build
     - name: Run tests
       run: make test
