@@ -10,16 +10,7 @@ wip:
 install:
 	uv venv
 	uv pip install -r pyproject.toml
-	
-# Build command
-.PHONY: build
-build:
-	uv run build
 
-# Deploy command
-.PHONY: deploy
-deploy:
-	uv run deploy
 
 # Test command
 .PHONY: test
@@ -38,8 +29,6 @@ help:
 	@echo "Available commands:"
 	@echo "  wip     - Commit and push work in progress"
 	@echo "  install - Install dependencies"
-	@echo "  build   - Build the project"
-	@echo "  deploy  - Deploy the project"
 	@echo "  test    - Run tests"
 	@echo "  lint    - Run linter"
 	@echo "  help    - Display this help message"

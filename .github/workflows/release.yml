@@ -10,18 +10,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Use Node.js
-        uses: actions/setup-node@v4
+      - name: Set up Python
+        uses: actions/setup-python@v4
         with:
-          node-version: '20'
-          registry-url: 'https://registry.npmjs.org'
-      - run: rm package-lock.json
-      - run: npm install
-      - run: npm run build
-      - run: npm test
+          python-version: '3.12'
       - name: Extract version from tag
         run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
-      - run: npm version $VERSION --no-git-tag-version
-      - run: npm publish
+      - name: Install uv
+        run: pip install uv
+      - name: Use uv with Python version
+        run: uv venv --python 3.12
+      - run: make install
+      - run: make build
+      - run: make test
+
+      - run: make deploy
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
