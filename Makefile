@@ -8,13 +8,13 @@ wip:
 # Install command
 .PHONY: install
 install:
-	uv venv
-	uv pip install -r pyproject.toml
+	uv sync --all-extras --dev
 	
 # Build command
 .PHONY: build
 build:
-	uv build
+	rm -rf dist/* || true
+	uv build set version
 
 # Deploy command
 .PHONY: deploy

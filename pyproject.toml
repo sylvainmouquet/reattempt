@@ -1,11 +1,13 @@
 [project]
 name = "reattempt"
-version = "0.1.0"
+version = "0.1.3"
 description = "Retrying a python function when exceptions are raised"
 authors = [{name = "Sylvain Mouquet", email = "sylvain.mouquet@gmail.com"}]
 readme = "README.md"
 requires-python = ">=3.9"
-dependencies = []
+dependencies = [
+    "reattempt",
+]
 repository = "https://github.com/sylvainmouquet/reattempt"
 
 [build-system]
@@ -19,3 +21,6 @@ dev-dependencies = [
     "pytest>=8.3.3",
     "ruff>=0.6.7",
 ]
+
+[tool.uv.sources]
+reattempt = { workspace = true }

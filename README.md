@@ -5,11 +5,14 @@ ReAttempt is a python decorator to retry a function when exceptions are raised.
 ### Demonstration:
 
 ```python
-from reattempt import reattempt
+import reattempt
 
 @reattempt(max_retries=5, min_time=0.1, max_time=2)
 def wrong_function():
   raise Exception("failure")
+
+if __name__ == "__main__":
+    wrong_function()
 
 ------------------------------------------------------- live log call -------------------------------------------------------
 WARNING  root:__init__.py:167 [RETRY] Attempt 1/5 failed, retrying in 0.17 seconds...
@@ -32,7 +35,7 @@ ERROR    root:__init__.py:177 [RETRY] Max retries reached
 
 ## Description
 
-ReAttempt 
+ReAttempt is a Python library that provides a decorator to automatically retry a function when exceptions are raised. It uses an exponential backoff strategy to wait between retries, ensuring that the function has multiple chances to succeed before ultimately failing.
 
 ## Installation
 
@@ -46,7 +49,7 @@ poetry add reattempt
 ## Usage
 
 ```bash
-from reattempt import reattempt
+import reattempt
 
 @reattempt
 def hello_world():
