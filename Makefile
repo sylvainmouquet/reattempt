@@ -20,8 +20,7 @@ build: check-version
 	./scripts/version.sh "${VERSION}"
 	@cat pyproject.toml | grep version
 	@cat reattempt/__init__.py | grep version
-#	@sed -i '' 's/^version =.*/version = "${VERSION}"/' pyproject.toml
-#	uv build
+	uv build
 
 .PHONY: check-version
 check-version:

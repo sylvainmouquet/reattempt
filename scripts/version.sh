@@ -6,5 +6,7 @@ if [ -z "${VERSION}" ]; then
   exit 1
 fi
 
+ls -al
+
 sed  -i '' -e "s/^version =.*/version = \"${VERSION}\"/" pyproject.toml
 sed  -i '' -e "s/^__version__ =.*/__version__ = \"${VERSION}\"/" reattempt/__init__.py
