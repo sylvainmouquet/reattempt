@@ -8,8 +8,9 @@ wip:
 # Install command
 .PHONY: install
 install:
-	uv install
-
+	uv venv
+	uv pip install -r pyproject.toml
+	
 # Build command
 .PHONY: build
 build:
