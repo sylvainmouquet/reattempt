@@ -5,6 +5,8 @@ ReAttempt is a python decorator to retry a function when exceptions are raised.
 ### Demonstration:
 
 ```python
+from reattempt import reattempt
+
 @reattempt(max_retries=5, min_time=0.1, max_time=2)
 def wrong_function():
   raise Exception("failure")
@@ -48,7 +50,8 @@ from reattempt import reattempt
 
 @reattempt
 def hello_world():
-    print("Hello World")
+  print("Hello World")
+  raise Exception("failure")
 
 if __name__ == "__main__":
     hello_world()

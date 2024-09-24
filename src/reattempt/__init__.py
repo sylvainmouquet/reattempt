@@ -13,6 +13,7 @@ CONST_DEFAULT_MAX_TIME: float = 0.2
 logger = logging.getLogger("reattempt")
 logger.addHandler(logging.NullHandler())
 
+__all__ = ["reattempt"]
 
 def reattempt(
     func=None,
@@ -47,7 +48,7 @@ def reattempt(
 
     Example:
     --------
-    @retry_on_failure(max_retries=5, min_time=1, max_time=10)
+    @reattempt(max_retries=5, min_time=1, max_time=10)
     def my_function():
         # Function logic that may fail intermittently
         pass
@@ -192,3 +193,5 @@ def reattempt(
     if func:
         return decorator(func)
     return decorator
+
+
