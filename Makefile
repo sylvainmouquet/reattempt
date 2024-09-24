@@ -16,6 +16,7 @@ build: check-version
 	rm -rf dist/* || true
 	ls -al
 	cat pyproject.toml | sed 's/^version =.*/version = "${VERSION}"/' > pyproject.toml
+	cat pyproject.toml 
 #	@sed -i '' 's/^version =.*/version = "${VERSION}"/' pyproject.toml
 	uv build
 
