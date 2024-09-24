@@ -23,7 +23,7 @@ deploy:
 # Test command
 .PHONY: test
 test:
-	uv run pytest
+	uv run pytest -v --log-cli-level=INFO
 
 # Lint command
 .PHONY: lint

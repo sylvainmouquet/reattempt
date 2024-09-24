@@ -2,12 +2,22 @@ from typing import AsyncGenerator
 
 import pytest
 from reattempt import reattempt
+import logging
+
+from test.conftest import MAX_ATTEMPTS, MIN_TIME, MAX_TIME, RetryException
+
+@reattempt(max_retries=MAX_ATTEMPTS, min_time=MIN_TIME, max_time=MAX_TIME)
+def sync_function():
+    sync_function.counter += 1  # type: ignore
+    raise Exception("failure")
+
+@reattempt(max_retries=MAX_ATTEMPTS, min_time=MIN_TIME, max_time=MAX_TIME)
+async def async_function():
+    async_function.counter += 1  # type: ignore
+    raise Exception("failure")
 
 
-class RetryException(Exception): ...
-
-
-@reattempt(max_retries=5, min_time=0.1, max_time=0.2)
+@reattempt(max_retries=MAX_ATTEMPTS, min_time=MIN_TIME, max_time=MAX_TIME)
 async def async_gen_function() -> AsyncGenerator:
     async_gen_function.counter += 1  # type: ignore
 
@@ -16,9 +26,7 @@ async def async_gen_function() -> AsyncGenerator:
 
 
 @pytest.mark.asyncio
-async def test_retry_async_gen(mocker):
-    # mocker.patch("loguru.logger.exception", lambda *args, **kwargs: None)
-
+async def test_retry_async_gen(disable_logging_exception):
     async_gen_function.counter = 0  # type: ignore
 
     with pytest.raises(RetryException) as exc_info:
@@ -26,18 +34,11 @@ async def test_retry_async_gen(mocker):
             break  # Break immediately, as we expect an exception to be raised
 
     assert str(exc_info.value) == "Error", str(exc_info.value)
-    assert async_gen_function.counter == 5  # type: ignore
+    assert async_gen_function.counter == MAX_ATTEMPTS  # type: ignore
 
 
 @pytest.mark.asyncio
-async def test_retry_sync(mocker):
-    # mocker.patch("loguru.logger.exception", lambda *args, **kwargs: None)
-
-    @reattempt(max_retries=5, min_time=0.1, max_time=0.2)
-    def sync_function():
-        sync_function.counter += 1  # type: ignore
-        raise Exception("failure")
-
+async def test_retry_sync(disable_logging_exception):
     sync_function.counter = 0  # type: ignore
 
     try:
@@ -45,17 +46,11 @@ async def test_retry_sync(mocker):
         pytest.fail("Must not come here")
     except Exception:
         print("Success")
-    assert sync_function.counter == 5  # type: ignore
+    assert sync_function.counter == MAX_ATTEMPTS  # type: ignore
 
 
 @pytest.mark.asyncio
-async def test_retry_async(mocker):
-    # mocker.patch("loguru.logger.exception", lambda *args, **kwargs: None)
-
-    @reattempt(max_retries=5, min_time=0.1, max_time=0.2)
-    async def async_function():
-        async_function.counter += 1  # type: ignore
-        raise Exception("failure")
+async def test_retry_async(disable_logging_exception):
 
     async_function.counter = 0  # type: ignore
 
@@ -64,4 +59,4 @@ async def test_retry_async(mocker):
         pytest.fail("Must not come here")
     except Exception:
         print("Success")
-    assert async_function.counter == 5  # type: ignore
+    assert async_function.counter == MAX_ATTEMPTS  # type: ignore

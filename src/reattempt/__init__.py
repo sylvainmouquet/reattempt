@@ -9,6 +9,8 @@ import time
 CONST_DEFAULT_MAX_RETRIES: int = 5
 CONST_DEFAULT_MIN_TIME: float = 0.1
 CONST_DEFAULT_MAX_TIME: float = 0.2
+def configure_logging(level=logging.INFO):
+    logging.basicConfig(level=level)
 
 
 def reattempt(
