@@ -15,6 +15,7 @@ logger.addHandler(logging.NullHandler())
 
 __all__ = ["reattempt"]
 
+
 def reattempt(
     func=None,
     max_retries: int = CONST_DEFAULT_MAX_RETRIES,
@@ -193,5 +194,3 @@ def reattempt(
     if func:
         return decorator(func)
     return decorator
-
-
