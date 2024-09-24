@@ -6,15 +6,12 @@ ReAttempt is a python decorator to retry a function when exceptions are raised.
 
 
 ```python
-merge("text-gray-100 text-gray-50")
-    -> "text-gray-50"
-merge(clsx("text-gray-100", "text-gray-50")) 
-    -> "text-gray-50"
+
 ```
 
 ## Table of Contents
 
-- [TWindMerge](#TWindMerge)
+- [ReAttempt](#ReAttempt)
   - [Table of Contents](#table-of-contents)
   - [Description](#description)
   - [Installation](#installation)
@@ -24,32 +21,36 @@ merge(clsx("text-gray-100", "text-gray-50"))
 
 ## Description
 
-TWindMerge provides a powerful solution for managing Tailwind CSS classes in dynamic environments. 
-By keeping only the latest conflicting class, TWindMerge ensures that your styles are applied as intended, reducing unexpected visual outcomes and improving the maintainability of your codebase.
-
+ReAttempt 
 
 ## Installation
 
 ```bash
 # Install the dependency
-npm install --save twindmerge
-
+pip install reattempt
+uv add reattempt
+poetry add reattempt
 ```
 
 ## Usage
 
 ```bash
-# Import and call the merge function
-import {merge} from 'twindmerge'
-<div className={merge("bg-red-200 bg-green-200")}></div>
+from reattempt import reattempt
+
+@reattempt
+def hello_world():
+    print("Hello World")
+
+if __name__ == "__main__":
+    hello_world()
 ```
 
 
 ## License
 
-TWindMerge is released under the MIT License. See the [LICENSE](LICENSE) file for more details.
+ReAttempt is released under the MIT License. See the [LICENSE](LICENSE) file for more details.
 
 ## Contact
 
-For questions, suggestions, or issues related to TWindMerge, please open an issue on the GitHub repository.
+For questions, suggestions, or issues related to ReAttempt, please open an issue on the GitHub repository.
 
