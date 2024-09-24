@@ -1,3 +1,5 @@
+SHELL:=/bin/bash
+
 # Git workflow commands
 .PHONY: wip
 wip:
@@ -15,11 +17,11 @@ install:
 build: check-version
 	rm -rf dist/* || true
 #	ls -al
-	$(sed -i 's/^version =.*/version = "${VERSION}"/' pyproject.toml)
-	$(sed -i 's/^__version__ =.*/__version__ = "${VERSION}"/' src/reattempt/__init__.py)
-	cat pyproject.toml | grep version
+	./scripts/version.sh "${VERSION}"
+	@cat pyproject.toml | grep version
+	@cat reattempt/__init__.py | grep version
 #	@sed -i '' 's/^version =.*/version = "${VERSION}"/' pyproject.toml
-	uv build
+#	uv build
 
 .PHONY: check-version
 check-version:
