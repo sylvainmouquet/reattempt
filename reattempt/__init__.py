@@ -1,5 +1,5 @@
 __version__ = "1.0.7"
-__all__ = ["reattempt"]
+__all__ = ("__version__", "reattempt")
 
 import asyncio
 import contextlib
@@ -16,9 +16,6 @@ CONST_DEFAULT_MAX_TIME: float = 0.2
 logger = logging.getLogger("reattempt")
 logger.addHandler(logging.NullHandler())
 
-
-def __call__(func, max_retries=CONST_DEFAULT_MAX_RETRIES, min_time=CONST_DEFAULT_MIN_TIME, max_time=CONST_DEFAULT_MAX_TIME):
-    return reattempt(func, max_retries, min_time, max_time)
 
 def reattempt(
     func=None,
@@ -199,5 +196,3 @@ def reattempt(
         return decorator(func)
     return decorator
 
-import sys
-sys.modules[__name__] = reattempt
