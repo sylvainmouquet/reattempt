@@ -13,8 +13,6 @@ CONST_DEFAULT_MAX_TIME: float = 0.2
 logger = logging.getLogger("reattempt")
 logger.addHandler(logging.NullHandler())
 
-__all__ = ["reattempt"]
-
 
 def reattempt(
     func=None,
@@ -194,3 +192,9 @@ def reattempt(
     if func:
         return decorator(func)
     return decorator
+
+
+__all__ = ["reattempt"]
+
+# Make retry available at the module level
+reattempt = reattempt

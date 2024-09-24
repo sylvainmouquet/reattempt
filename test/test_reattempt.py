@@ -1,7 +1,6 @@
 from typing import AsyncGenerator
 
 import pytest
-
 from src.reattempt import reattempt
 from test.conftest import MAX_ATTEMPTS, MIN_TIME, MAX_TIME, RetryException
 
