@@ -6,7 +6,6 @@ authors = [{name = "Sylvain Mouquet", email = "sylvain.mouquet@gmail.com"}]
 readme = "README.md"
 requires-python = ">=3.9"
 dependencies = [
-    "reattempt",
 ]
 repository = "https://github.com/sylvainmouquet/reattempt"
 
