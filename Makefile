@@ -14,6 +14,7 @@ install:
 .PHONY: build
 build: check-version
 	rm -rf dist/* || true
+	ls -al
 	@sed -i '' 's/^version =.*/version = "${VERSION}"/' pyproject.toml
 	uv build
 
