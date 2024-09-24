@@ -17,7 +17,7 @@ async def async_gen_function() -> AsyncGenerator:
 
 @pytest.mark.asyncio
 async def test_retry_async_gen(mocker):
-    #mocker.patch("loguru.logger.exception", lambda *args, **kwargs: None)
+    # mocker.patch("loguru.logger.exception", lambda *args, **kwargs: None)
 
     async_gen_function.counter = 0  # type: ignore
 
@@ -31,7 +31,7 @@ async def test_retry_async_gen(mocker):
 
 @pytest.mark.asyncio
 async def test_retry_sync(mocker):
-    #mocker.patch("loguru.logger.exception", lambda *args, **kwargs: None)
+    # mocker.patch("loguru.logger.exception", lambda *args, **kwargs: None)
 
     @reattempt(max_retries=5, min_time=0.1, max_time=0.2)
     def sync_function():
@@ -50,7 +50,7 @@ async def test_retry_sync(mocker):
 
 @pytest.mark.asyncio
 async def test_retry_async(mocker):
-    #mocker.patch("loguru.logger.exception", lambda *args, **kwargs: None)
+    # mocker.patch("loguru.logger.exception", lambda *args, **kwargs: None)
 
     @reattempt(max_retries=5, min_time=0.1, max_time=0.2)
     async def async_function():

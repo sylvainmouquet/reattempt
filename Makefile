@@ -28,7 +28,8 @@ test:
 # Lint command
 .PHONY: lint
 lint:
-	uv run lint
+	uv run ruff check 
+	uv run ruff format --check
 
 # Display all available commands
 .PHONY: help

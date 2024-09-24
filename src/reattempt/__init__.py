@@ -11,7 +11,12 @@ CONST_DEFAULT_MIN_TIME: float = 0.1
 CONST_DEFAULT_MAX_TIME: float = 0.2
 
 
-def reattempt(func=None, max_retries: int = CONST_DEFAULT_MAX_RETRIES, min_time: float = CONST_DEFAULT_MIN_TIME, max_time: float = CONST_DEFAULT_MAX_TIME):
+def reattempt(
+    func=None,
+    max_retries: int = CONST_DEFAULT_MAX_RETRIES,
+    min_time: float = CONST_DEFAULT_MIN_TIME,
+    max_time: float = CONST_DEFAULT_MAX_TIME,
+):
     """
     Decorator to retry a function upon failure with exponential backoff.
 
@@ -70,9 +75,13 @@ def reattempt(func=None, max_retries: int = CONST_DEFAULT_MAX_RETRIES, min_time:
                     capture_exception = e
 
                     if attempt + 1 == max_retries:
-                        logging.warning(f"[RETRY] Attempt {attempt + 1}/{max_retries} failed, stopping")
+                        logging.warning(
+                            f"[RETRY] Attempt {attempt + 1}/{max_retries} failed, stopping"
+                        )
                     else:
-                        logging.warning(f"[RETRY] Attempt {attempt + 1}/{max_retries} failed, retrying in {format(wait_time, '.2f')} seconds...")
+                        logging.warning(
+                            f"[RETRY] Attempt {attempt + 1}/{max_retries} failed, retrying in {format(wait_time, '.2f')} seconds..."
+                        )
 
                     attempt += 1
                     await asyncio.sleep(wait_time)
@@ -100,9 +109,13 @@ def reattempt(func=None, max_retries: int = CONST_DEFAULT_MAX_RETRIES, min_time:
                     capture_exception = e
 
                     if attempt + 1 == max_retries:
-                        logging.warning(f"[RETRY] Attempt {attempt + 1}/{max_retries} failed, stopping")
+                        logging.warning(
+                            f"[RETRY] Attempt {attempt + 1}/{max_retries} failed, stopping"
+                        )
                     else:
-                        logging.warning(f"[RETRY] Attempt {attempt + 1}/{max_retries} failed, retrying in {format(wait_time, '.2f')} seconds...")
+                        logging.warning(
+                            f"[RETRY] Attempt {attempt + 1}/{max_retries} failed, retrying in {format(wait_time, '.2f')} seconds..."
+                        )
 
                     attempt += 1
                     time.sleep(wait_time)
@@ -144,9 +157,13 @@ def reattempt(func=None, max_retries: int = CONST_DEFAULT_MAX_RETRIES, min_time:
                         logging.exception(e)
 
                         if attempt + 1 == max_retries:
-                            logging.warning(f"[RETRY] Attempt {attempt + 1}/{max_retries} failed, stopping")
+                            logging.warning(
+                                f"[RETRY] Attempt {attempt + 1}/{max_retries} failed, stopping"
+                            )
                         else:
-                            logging.warning(f"[RETRY] Attempt {attempt + 1}/{max_retries} failed, retrying in {format(wait_time, '.2f')} seconds...")
+                            logging.warning(
+                                f"[RETRY] Attempt {attempt + 1}/{max_retries} failed, retrying in {format(wait_time, '.2f')} seconds..."
+                            )
 
                         attempt = attempt + 1
                         await asyncio.sleep(wait_time)
