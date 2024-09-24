@@ -5,10 +5,12 @@ from reattempt import reattempt
 
 from test.conftest import MAX_ATTEMPTS, MIN_TIME, MAX_TIME, RetryException
 
+
 @reattempt(max_retries=MAX_ATTEMPTS, min_time=MIN_TIME, max_time=MAX_TIME)
 def sync_function():
     sync_function.counter += 1  # type: ignore
     raise Exception("failure")
+
 
 @reattempt(max_retries=MAX_ATTEMPTS, min_time=MIN_TIME, max_time=MAX_TIME)
 async def async_function():
@@ -50,7 +52,6 @@ async def test_retry_sync(disable_logging_exception):
 
 @pytest.mark.asyncio
 async def test_retry_async(disable_logging_exception):
-
     async_function.counter = 0  # type: ignore
 
     try:
