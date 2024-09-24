@@ -19,6 +19,7 @@ dev-dependencies = [
     "pytest-mock>=3.14.0",
     "pytest>=8.3.3",
     "ruff>=0.6.7",
+    "reattempt>=0.0.1"
 ]
 
 [tool.uv.sources]
