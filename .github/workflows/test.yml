@@ -1,0 +1,35 @@
+name: Run Tests
+
+on:
+  push:
+    branches:
+      - '*'
+  pull_request:
+    branches:
+      - '*'
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.9', '3.10', '3.11', '3.12']
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 10
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install uv
+      uses: astral-sh/setup-uv@v2
+    - name: Use uv with Python version
+      run: uv venv --python ${{ matrix.python-version }}
+    - name: Install dependencies
+      run: make install
+    - name: Build
+      run: VERSION=0.0.1 make build
+    - name: Run tests
+      run: make test
