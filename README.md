@@ -48,7 +48,7 @@ poetry add reattempt
 
 ## Usage
 
-```bash
+```python
 import reattempt
 
 @reattempt

@@ -14,7 +14,7 @@ install:
 .PHONY: build
 build: check-version
 	rm -rf dist/* || true
-	ls -al
+#	ls -al
 	sed -i 's/^version =.*/version = "${VERSION}"/' pyproject.toml
 	cat pyproject.toml | grep version
 #	@sed -i '' 's/^version =.*/version = "${VERSION}"/' pyproject.toml
