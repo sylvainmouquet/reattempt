@@ -1,6 +1,6 @@
 [project]
 name = "reattempt"
-version = "0.1.3"
+version = "0.1.4"
 description = "Retrying a python function when exceptions are raised"
 authors = [{name = "Sylvain Mouquet", email = "sylvain.mouquet@gmail.com"}]
 readme = "README.md"

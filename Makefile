@@ -12,9 +12,17 @@ install:
 	
 # Build command
 .PHONY: build
-build:
+build: check-version
 	rm -rf dist/* || true
-	uv build set version
+	@sed -i '' 's/^version =.*/version = "${VERSION}"/' pyproject.toml
+	uv build
+
+.PHONY: check-version
+check-version:
+	@if [ -z "${VERSION}" ]; then \
+		echo "VERSION is not set. Please set the VERSION environment variable."; \
+		exit 1; \
+	fi
 
 # Deploy command
 .PHONY: deploy
