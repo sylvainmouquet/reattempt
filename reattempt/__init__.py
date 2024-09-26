@@ -195,4 +195,3 @@ def reattempt(
     if func:
         return decorator(func)
     return decorator
-

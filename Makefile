@@ -51,6 +51,16 @@ lint:
 	uv run ruff format
 	uv run ruff format --check
 
+# Update dependencies
+.PHONY: update
+update:
+	uv sync
+
+# Check for outdated dependencies
+.PHONY: check-deps
+check-deps:
+	uv pip list
+
 # Display all available commands
 .PHONY: help
 help:
@@ -62,4 +72,6 @@ help:
 	@echo "  install-local - Install the build locally"
 	@echo "  test          - Run tests"
 	@echo "  lint          - Run linter"
+	@echo "  update        - Update dependencies"
+	@echo "  check-deps    - Check for outdated dependencies"
 	@echo "  help          - Display this help message"

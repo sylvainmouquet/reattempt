@@ -9,7 +9,7 @@ dependencies = [
 ]
 license = { text = "MIT" }
 url = "https://github.com/sylvainmouquet/reattempt"
-keywords = ["retry", "decorator", "python", "exponential backoff", "exception handling"]
+keywords = ["retry", "decorator", "python", "exponential backoff", "exception handling", "sync", "async", "generator", "async gen"]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Developers",
@@ -20,7 +20,7 @@ classifiers = [
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
-    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Software Development :: Libraries :: Python Modules"
 ]
 
 [project.urls]
@@ -40,8 +40,12 @@ dev-dependencies = [
     "pytest-mock>=3.14.0",
     "pytest>=8.3.3",
     "ruff>=0.6.7",
-    "reattempt>=0.0.1"
+    "reattempt>=0.0.1",
+    "aiohttp>=3.10.6",
 ]
 
 [tool.uv.sources]
 reattempt = { path = "reattempt" }
+
+[tool.hatch.build.targets.wheel]
+packages = ["reattempt"]
