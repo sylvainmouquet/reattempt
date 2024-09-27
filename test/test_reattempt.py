@@ -1,4 +1,4 @@
-from typing import AsyncGenerator
+from typing import AsyncGenerator, Generator
 
 import pytest
 from reattempt import reattempt
@@ -12,6 +12,14 @@ def sync_function():
 
 
 @reattempt(max_retries=MAX_ATTEMPTS, min_time=MIN_TIME, max_time=MAX_TIME)
+def sync_gen_function() -> Generator:
+    sync_gen_function.counter += 1  # type: ignore
+
+    raise RetryException("Error")
+    yield 1  # mandatory, the function must return a Generator
+
+
+@reattempt(max_retries=MAX_ATTEMPTS, min_time=MIN_TIME, max_time=MAX_TIME)
 async def async_function():
     async_function.counter += 1  # type: ignore
     raise Exception("failure")
@@ -22,23 +30,14 @@ async def async_gen_function() -> AsyncGenerator:
     async_gen_function.counter += 1  # type: ignore
 
     raise RetryException("Error")
-    yield 1  # mandator, the function must return a AsyncGenerator
+    yield 1  # mandatory, the function must return a AsyncGenerator
+
+
+# TESTS
 
 
 @pytest.mark.asyncio
-async def test_retry_async_gen(disable_logging_exception):
-    async_gen_function.counter = 0  # type: ignore
-
-    with pytest.raises(RetryException) as exc_info:
-        async for _conn in async_gen_function():
-            break  # Break immediately, as we expect an exception to be raised
-
-    assert str(exc_info.value) == "Error", str(exc_info.value)
-    assert async_gen_function.counter == MAX_ATTEMPTS  # type: ignore
-
-
-@pytest.mark.asyncio
-async def test_retry_sync(disable_logging_exception):
+async def test_sync_retry(disable_logging_exception):
     sync_function.counter = 0  # type: ignore
 
     try:
@@ -50,7 +49,19 @@ async def test_retry_sync(disable_logging_exception):
 
 
 @pytest.mark.asyncio
-async def test_retry_async(disable_logging_exception):
+async def test_sync_gen_retry(disable_logging_exception):
+    sync_gen_function.counter = 0  # type: ignore
+
+    with pytest.raises(RetryException) as exc_info:
+        for _conn in sync_gen_function():
+            break  # Break immediately, as we expect an exception to be raised
+
+    assert str(exc_info.value) == "Error", str(exc_info.value)
+    assert sync_gen_function.counter == MAX_ATTEMPTS  # type: ignore
+
+
+@pytest.mark.asyncio
+async def test_async_retry(disable_logging_exception):
     async_function.counter = 0  # type: ignore
 
     try:
@@ -59,3 +70,15 @@ async def test_retry_async(disable_logging_exception):
     except Exception:
         print("Success")
     assert async_function.counter == MAX_ATTEMPTS  # type: ignore
+
+
+@pytest.mark.asyncio
+async def test_async_gen_retry(disable_logging_exception):
+    async_gen_function.counter = 0  # type: ignore
+
+    with pytest.raises(RetryException) as exc_info:
+        async for _conn in async_gen_function():
+            break  # Break immediately, as we expect an exception to be raised
+
+    assert str(exc_info.value) == "Error", str(exc_info.value)
+    assert async_gen_function.counter == MAX_ATTEMPTS  # type: ignore

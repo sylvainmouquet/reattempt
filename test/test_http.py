@@ -6,7 +6,7 @@ import aiohttp
 
 @reattempt(max_retries=MAX_ATTEMPTS, min_time=MIN_TIME, max_time=MAX_TIME)
 async def async_aiohttp_call(status: int):
-    async_aiohttp_call.counter += 1
+    async_aiohttp_call.counter += 1  # type: ignore
 
     async with aiohttp.ClientSession() as session:
         async with session.get(
@@ -17,7 +17,7 @@ async def async_aiohttp_call(status: int):
 
 
 @pytest.mark.asyncio
-async def test_retry_http_200():
+async def test_retry_http_200(disable_logging_exception):
     async_aiohttp_call.counter = 0  # type: ignore
 
     await async_aiohttp_call(200)
@@ -25,7 +25,7 @@ async def test_retry_http_200():
 
 
 @pytest.mark.asyncio
-async def test_retry_http_500():
+async def test_retry_http_500(disable_logging_exception):
     async_aiohttp_call.counter = 0  # type: ignore
 
     try:

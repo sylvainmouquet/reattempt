@@ -8,11 +8,11 @@ ReAttempt is a python decorator to retry a function when exceptions are raised.
 from reattempt import reattempt
 
 @reattempt(max_retries=5, min_time=0.1, max_time=2)
-def wrong_function():
-  raise Exception("failure")
+def simulate_network_failure():
+    raise Exception("Connection timeout")
 
 if __name__ == "__main__":
-    wrong_function()
+    simulate_network_failure()
 
 ------------------------------------------------------- live log call -------------------------------------------------------
 WARNING  root:__init__.py:167 [RETRY] Attempt 1/5 failed, retrying in 0.17 seconds...
@@ -50,14 +50,83 @@ poetry add reattempt
 
 ```python
 from reattempt import reattempt
+import asyncio
+import random
 
+# List of flowers for our examples
+flowers = ["Rose", "Tulip", "Sunflower", "Daisy", "Lily"]
+
+# Synchronous function example
 @reattempt
-def hello_world():
-  print("Hello World")
-  raise Exception("failure")
+def plant_flower():
+    flower = random.choice(flowers)
+    print(f"Attempting to plant a {flower}")
+    if random.random() < 0.8:  # 80% chance of failure
+        raise Exception(f"The {flower} didn't take root")
+    return f"{flower} planted successfully"
+
+# Synchronous generator example
+@reattempt
+def grow_flowers():
+    for _ in range(3):
+        flower = random.choice(flowers)
+        print(f"Growing {flower}")
+        yield flower
+    if random.random() < 0.5:  # 50% chance of failure at the end
+        raise Exception("The garden needs more fertilizer")
+
+# Asynchronous function example
+@reattempt
+async def water_flower():
+    flower = random.choice(flowers)
+    print(f"Watering the {flower}")
+    await asyncio.sleep(0.1)  # Simulating watering time
+    if random.random() < 0.6:  # 60% chance of failure
+        raise Exception(f"The {flower} needs more water")
+    return f"{flower} is well-watered"
+
+# Asynchronous generator function example
+@reattempt
+async def harvest_flowers():
+    for _ in range(3):
+        flower = random.choice(flowers)
+        print(f"Harvesting {flower}")
+        yield flower
+        await asyncio.sleep(0.1)  # Time between harvests
+    if random.random() < 0.4:  # 40% chance of failure at the end
+        raise Exception("The garden needs more care")
+
+async def tend_garden():
+    # Plant a flower (sync function)
+    try:
+        result = plant_flower()
+        print(result)
+    except Exception as e:
+        print(f"Planting error: {e}")
+
+    # Grow flowers (sync generator)
+    try:
+        for flower in grow_flowers():
+            print(f"Grown: {flower}")
+    except Exception as e:
+        print(f"Growing error: {e}")
+
+    # Water a flower (async function)
+    try:
+        result = await water_flower()
+        print(result)
+    except Exception as e:
+        print(f"Watering error: {e}")
+
+    # Harvest flowers (async generator function)
+    try:
+        async for flower in harvest_flowers():
+            print(f"Harvested: {flower}")
+    except Exception as e:
+        print(f"Harvesting error: {e}")
 
 if __name__ == "__main__":
-    hello_world()
+    asyncio.run(tend_garden())
 ```
 
 

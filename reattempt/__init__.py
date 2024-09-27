@@ -186,10 +186,57 @@ def reattempt(
             if capture_exception and not should_retry:
                 raise capture_exception
 
+        @functools.wraps(func)
+        def retry_sync_gen_func(*args, **kwargs):
+            wait_time: float = min_time
+            attempt: int = 0
+            should_retry: bool = True
+            capture_exception: Exception | None = None
+
+            while should_retry and attempt < max_retries:
+                wait_time = random.uniform(wait_time, max_time)
+
+                try:
+                    item = None
+                    for item in func(*args, **kwargs):
+                        yield item
+                    break
+                except Exception as e:
+                    capture_exception = e
+
+                    if not item:  # the instantiation has failed
+                        logging.exception(e)
+
+                        if attempt + 1 == max_retries:
+                            logging.warning(
+                                f"[RETRY] Attempt {attempt + 1}/{max_retries} failed, stopping"
+                            )
+                        else:
+                            logging.warning(
+                                f"[RETRY] Attempt {attempt + 1}/{max_retries} failed, retrying in {format(wait_time, '.2f')} seconds..."
+                            )
+
+                        attempt = attempt + 1
+                        time.sleep(wait_time)
+                    else:
+                        should_retry = False
+
+            if attempt == max_retries:
+                logging.error("[RETRY] Max retries reached")
+
+                if capture_exception:
+                    raise capture_exception
+
+            # for exceptions out of the scope of the gen
+            if capture_exception and not should_retry:
+                raise capture_exception
+
         if inspect.iscoroutinefunction(func):
             return retry_async_func
-        if inspect.isasyncgenfunction(func):
+        elif inspect.isasyncgenfunction(func):
             return retry_async_gen_func
+        elif inspect.isgeneratorfunction(func):
+            return retry_sync_gen_func
         return retry_sync_func
 
     if func:
