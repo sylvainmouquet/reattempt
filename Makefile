@@ -1,4 +1,19 @@
+# makefile use bash as default shell during execution.
+.SILENT: ;               # no need for @
+.ONESHELL: ;             # recipes execute in same shell
+
+.EXPORT_ALL_VARIABLES:  # send all vars to shell
+.POSIX: ;
+
 SHELL:=/bin/bash
+
+SUPPORTED_COMMANDS := test
+SUPPORTS_MAKE_ARGS := $(findstring $(firstword $(MAKECMDGOALS)), $(SUPPORTED_COMMANDS))
+ifneq "$(SUPPORTS_MAKE_ARGS)" ""
+  COMMAND_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
+  COMMAND_ARGS := $(subst :,\:,$(COMMAND_ARGS))
+  $(eval $(COMMAND_ARGS):;@:)
+endif
 
 # Git workflow commands
 .PHONY: wip
@@ -42,7 +57,12 @@ install-local:
 # Test command
 .PHONY: test
 test:
-	uv run pytest -v --log-cli-level=INFO
+	echo "With arguments: $(COMMAND_ARGS)"
+	@if [ -z "$(COMMAND_ARGS)" ]; then \
+		uv run pytest -v --log-cli-level=INFO; \
+	else \
+		uv run pytest -v --log-cli-level=INFO $(COMMAND_ARGS); \
+	fi
 
 # Lint command
 .PHONY: lint
