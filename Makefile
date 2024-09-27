@@ -1,10 +1,3 @@
-# makefile use bash as default shell during execution.
-.SILENT: ;               # no need for @
-.ONESHELL: ;             # recipes execute in same shell
-
-.EXPORT_ALL_VARIABLES:  # send all vars to shell
-.POSIX: ;
-
 SHELL:=/bin/bash
 
 SUPPORTED_COMMANDS := test
@@ -57,11 +50,11 @@ install-local:
 # Test command
 .PHONY: test
 test:
-	echo "With arguments: $(COMMAND_ARGS)"
+	@echo "Modified arguments: $(new_args)"
 	@if [ -z "$(COMMAND_ARGS)" ]; then \
 		uv run pytest -v --log-cli-level=INFO; \
 	else \
-		uv run pytest -v --log-cli-level=INFO $(COMMAND_ARGS); \
+		uv run pytest -v --log-cli-level=INFO $(new_args); \
 	fi
 
 # Lint command

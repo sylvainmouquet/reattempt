@@ -65,6 +65,16 @@ def plant_flower():
         raise Exception(f"The {flower} didn't take root")
     return f"{flower} planted successfully"
 
+# Synchronous generator example
+@reattempt
+def grow_flowers():
+    for _ in range(3):
+        flower = random.choice(flowers)
+        print(f"Growing {flower}")
+        yield flower
+    if random.random() < 0.5:  # 50% chance of failure at the end
+        raise Exception("The garden needs more fertilizer")
+
 # Asynchronous function example
 @reattempt
 async def water_flower():
@@ -93,6 +103,13 @@ async def tend_garden():
         print(result)
     except Exception as e:
         print(f"Planting error: {e}")
+
+    # Grow flowers (sync generator)
+    try:
+        for flower in grow_flowers():
+            print(f"Grown: {flower}")
+    except Exception as e:
+        print(f"Growing error: {e}")
 
     # Water a flower (async function)
     try:
