@@ -6,6 +6,7 @@ authors = [{name = "Sylvain Mouquet", email = "sylvain.mouquet@gmail.com"}]
 readme = "README.md"
 requires-python = ">=3.9"
 dependencies = [
+    "pip>=24.2",
 ]
 license = { text = "MIT" }
 url = "https://github.com/sylvainmouquet/reattempt"
@@ -36,12 +37,12 @@ build-backend = "hatchling.build"
 
 [tool.uv]
 dev-dependencies = [
+    "aiohttp>=3.10.6",
+    "pytest>=8.3.3",
     "pytest-asyncio>=0.24.0",
     "pytest-mock>=3.14.0",
-    "pytest>=8.3.3",
-    "ruff>=0.6.7",
     "reattempt>=0.0.1",
-    "aiohttp>=3.10.6",
+    "ruff>=0.6.7",
 ]
 
 [tool.uv.sources]

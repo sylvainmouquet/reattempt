@@ -59,7 +59,12 @@ update:
 # Check for outdated dependencies
 .PHONY: check-deps
 check-deps:
-	uv pip list
+	.venv/bin/pip list --outdated
+
+# Run type checking
+.PHONY: type-check
+type-check:
+	PYRIGHT_PYTHON_FORCE_VERSION=latest uv run pyright
 
 # Display all available commands
 .PHONY: help
@@ -74,4 +79,5 @@ help:
 	@echo "  lint          - Run linter"
 	@echo "  update        - Update dependencies"
 	@echo "  check-deps    - Check for outdated dependencies"
+	@echo "  type-check    - Run type checking"
 	@echo "  help          - Display this help message"

@@ -8,6 +8,7 @@ import inspect
 import logging
 import random
 import time
+from typing import AsyncGenerator, Callable
 
 CONST_DEFAULT_MAX_RETRIES: int = 5
 CONST_DEFAULT_MIN_TIME: float = 0.1
@@ -18,7 +19,7 @@ logger.addHandler(logging.NullHandler())
 
 
 def reattempt(
-    func=None,
+    func:Callable | None = None,
     max_retries: int = CONST_DEFAULT_MAX_RETRIES,
     min_time: float = CONST_DEFAULT_MIN_TIME,
     max_time: float = CONST_DEFAULT_MAX_TIME,
@@ -192,6 +193,6 @@ def reattempt(
             return retry_async_gen_func
         return retry_sync_func
 
-    if func:
+    if inspect.isfunction(func):
         return decorator(func)
     return decorator
