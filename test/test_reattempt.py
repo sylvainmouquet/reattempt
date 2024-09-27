@@ -10,6 +10,7 @@ def sync_function():
     sync_function.counter += 1  # type: ignore
     raise Exception("failure")
 
+
 @reattempt(max_retries=MAX_ATTEMPTS, min_time=MIN_TIME, max_time=MAX_TIME)
 def sync_gen_function() -> Generator:
     sync_gen_function.counter += 1  # type: ignore
@@ -34,6 +35,7 @@ async def async_gen_function() -> AsyncGenerator:
 
 # TESTS
 
+
 @pytest.mark.asyncio
 async def test_sync_retry(disable_logging_exception):
     sync_function.counter = 0  # type: ignore
@@ -44,6 +46,7 @@ async def test_sync_retry(disable_logging_exception):
     except Exception:
         print("Success")
     assert sync_function.counter == MAX_ATTEMPTS  # type: ignore
+
 
 @pytest.mark.asyncio
 async def test_sync_gen_retry(disable_logging_exception):
@@ -79,5 +82,3 @@ async def test_async_gen_retry(disable_logging_exception):
 
     assert str(exc_info.value) == "Error", str(exc_info.value)
     assert async_gen_function.counter == MAX_ATTEMPTS  # type: ignore
-
-
