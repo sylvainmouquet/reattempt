@@ -18,7 +18,10 @@ jobs:
       matrix:
         python-version: ['3.9', '3.10', '3.11', '3.12', '3.13.0-rc.2']
     steps:
-    - uses: ./.github/actions/test.yml
+    - uses: actions/checkout@v4
+      with:
+        ref: ${{ github.ref }}
+    - uses: ./.github/actions/test
 
   test-windows:
     runs-on: windows-latest
@@ -26,7 +29,10 @@ jobs:
       matrix:
         python-version: ['3.9', '3.10', '3.11', '3.12', '3.13.0-rc.2']
     steps:
-    - uses: ./.github/actions/test.yml
+    - uses: actions/checkout@v4
+      with:
+        ref: ${{ github.ref }}
+    - uses: ./.github/actions/test
 
   test-ubuntu:
     runs-on: ubuntu-latest
@@ -34,4 +40,7 @@ jobs:
       matrix:
         python-version: ['3.9', '3.10', '3.11', '3.12', '3.13.0-rc.2']
     steps:
-    - uses: ./.github/actions/test.yml
+    - uses: actions/checkout@v4
+      with:
+        ref: ${{ github.ref }}
+    - uses: ./.github/actions/test
