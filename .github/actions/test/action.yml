@@ -15,11 +15,15 @@ runs:
       uses: astral-sh/setup-uv@v2
     - name: Use uv with Python version
       run: uv venv --python ${{ matrix.python-version }}
+      shell: bash
     - name: Install dependencies
       run: make install
+      shell: bash
     - name: Build
       env:
         VERSION: 0.0.1
       run: make build
+      shell: bash
     - name: Run tests
       run: make test
+      shell: bash
