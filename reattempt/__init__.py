@@ -198,8 +198,9 @@ def reattempt(
 
                 try:
                     item = None
-                    for item in func(*args, **kwargs):
-                        yield item
+                    with contextlib.closing(func(*args, **kwargs)) as agen:
+                        for item in agen:
+                            yield item
                     break
                 except Exception as e:
                     capture_exception = e
