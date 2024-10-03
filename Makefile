@@ -67,6 +67,7 @@ lint:
 # Update dependencies
 .PHONY: update
 update:
+	uv lock --upgrade
 	uv sync
 
 # Check for outdated dependencies
