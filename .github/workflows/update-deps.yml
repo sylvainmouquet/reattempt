@@ -21,6 +21,9 @@ jobs:
         with:
           python-version: 3.12
 
+      - name: Use uv with Python version
+        run: uv venv --python 3.12
+
       - name: Save check dependencies output (before)
         id: check_deps_before
         run: |
