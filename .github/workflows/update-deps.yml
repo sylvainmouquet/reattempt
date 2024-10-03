@@ -26,8 +26,8 @@ jobs:
       - name: Use uv with Python version
         run: uv venv --python 3.12
 
-      - name: Install dependencies
-        run: make install
+#      - name: Install dependencies
+#        run: make install
 
       - name: Save check dependencies output (before)
         id: check_deps_before
