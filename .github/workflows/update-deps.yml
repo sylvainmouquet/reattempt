@@ -17,17 +17,18 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: 3.12
 
       - name: Install uv
         uses: astral-sh/setup-uv@v2
+
       - name: Use uv with Python version
         run: uv venv --python 3.12
 
-#      - name: Install dependencies
-#        run: make install
+      - name: Install dependencies
+        run: uv sync
 
       - name: Save check dependencies output (before)
         id: check_deps_before
@@ -38,7 +39,6 @@ jobs:
           echo "BEFORE<<EOF" >> $GITHUB_ENV
           echo "$BEFORE" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
-
 
       - name: Run make update
         run: make update
