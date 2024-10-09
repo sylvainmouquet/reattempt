@@ -50,10 +50,11 @@ install-local:
 # Test command
 .PHONY: test
 test:
+	@echo "Modified arguments: $(new_args)"
 	@if [ -z "$(COMMAND_ARGS)" ]; then \
 		uv run --python $${PYTHON_VERSION:-3.13} pytest -v --log-cli-level=INFO; \
 	else \
-		uv run --python $${PYTHON_VERSION:-3.13} pytest -v --log-cli-level=INFO $(COMMAND_ARGS); \
+		uv run --python $${PYTHON_VERSION:-3.13} pytest -v --log-cli-level=INFO $(new_args); \
 	fi
 
 # Lint command
