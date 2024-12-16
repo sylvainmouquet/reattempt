@@ -24,10 +24,10 @@ jobs:
         pip install mkdocs mkdocs-material mkdocstrings-python markdown-exec
 
     - name: Build MkDocs site
-      run: mkdocs build --site-dir ./docs
+      run: mkdocs build --site-dir ./site
 
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./docs
+        publish_dir: ./site
