@@ -1,0 +1,36 @@
+site_name: "Reattempt"
+
+repo_url: https://github.com/sylvainmouquet/reattempt
+repo_name: GitHub
+
+theme:
+  name: "material"
+  features:
+    - navigation.tabs
+  icon:
+    repo: fontawesome/brands/github
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: indigo
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/sylvainmouquet/reattempt
+      name: "Star"
+      stars: true
+
+plugins:
+  - mkdocstrings
+  - markdown-exec:
+      pretty_print: true
+
+# SuperFences must still be enabled!
+markdown_extensions:
+- pymdownx.superfences
