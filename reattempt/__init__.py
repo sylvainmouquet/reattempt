@@ -8,6 +8,10 @@ import inspect
 import logging
 import random
 import time
+from collections.abc import Callable, Generator, AsyncGenerator
+from typing import Any, TypeVar, Union, Optional
+
+T = TypeVar("T")
 
 CONST_DEFAULT_MAX_RETRIES: int = 5
 CONST_DEFAULT_MIN_TIME: float = 0.1
@@ -18,11 +22,11 @@ logger.addHandler(logging.NullHandler())
 
 
 def reattempt(
-    func=None,
+    func: Optional[Callable[..., Any]] = None,
     max_retries: int = CONST_DEFAULT_MAX_RETRIES,
     min_time: float = CONST_DEFAULT_MIN_TIME,
     max_time: float = CONST_DEFAULT_MAX_TIME,
-):
+) -> Callable[..., Any]:
     """
     Decorator to retry a function upon failure with exponential backoff.
 
@@ -62,13 +66,12 @@ def reattempt(
     - If the function fails after the maximum number of retries, the last exception will be raised.
     """
 
-    def decorator(func):
+    def decorator(func: Callable[..., Any]) -> Callable[..., Any]:
         @functools.wraps(func)
-        async def retry_async_func(*args, **kwargs):
+        async def retry_async_func(*args: Any, **kwargs: Any) -> Any:
             wait_time: float = min_time
-            attempt: int = 0  # attempt: tentative
-            # Capture the latest exception to raise it at the end
-            capture_exception: Exception | None = None
+            attempt: int = 0
+            capture_exception: Optional[Exception] = None
 
             while attempt < max_retries:
                 wait_time = random.uniform(wait_time, max_time)
@@ -77,7 +80,6 @@ def reattempt(
                     return await func(*args, **kwargs)
                 except Exception as e:
                     logging.exception(e)
-
                     capture_exception = e
 
                     if attempt + 1 == max_retries:
@@ -94,15 +96,13 @@ def reattempt(
 
             if attempt == max_retries:
                 logging.error("[RETRY] Max retries reached")
-                if capture_exception:
-                    raise capture_exception
+                raise capture_exception
 
         @functools.wraps(func)
-        def retry_sync_func(*args, **kwargs):
+        def retry_sync_func(*args: Any, **kwargs: Any) -> Any:
             wait_time: float = min_time
-            attempt: int = 0  # attempt: tentative
-            # Capture the latest exception to raise it at the end
-            capture_exception: Exception | None = None
+            attempt: int = 0
+            capture_exception: Optional[Exception] = None
 
             while attempt < max_retries:
                 wait_time = random.uniform(wait_time, max_time)
@@ -111,7 +111,6 @@ def reattempt(
                     return func(*args, **kwargs)
                 except Exception as e:
                     logging.exception(e)
-
                     capture_exception = e
 
                     if attempt + 1 == max_retries:
@@ -128,19 +127,15 @@ def reattempt(
 
             if attempt == max_retries:
                 logging.error("[RETRY] Max retries reached")
-                if capture_exception:
-                    raise capture_exception
+                raise capture_exception
 
         @functools.wraps(func)
-        async def retry_async_gen_func(*args, **kwargs):
+        async def retry_async_gen_func(*args: Any, **kwargs: Any) -> AsyncGenerator[Any, None]:
             wait_time: float = min_time
-
-            # Capture the latest exception to raise it at the end
-            capture_exception: Exception | None = None
-
+            capture_exception: Optional[Exception] = None
             attempt: int = 0
             should_retry: bool = True
-            item = None
+            item: Optional[Any] = None
 
             while should_retry and attempt < max_retries:
                 wait_time = random.uniform(wait_time, max_time)
@@ -149,17 +144,13 @@ def reattempt(
                     item = None
                     async with contextlib.aclosing(func(*args, **kwargs)) as agen:
                         # https://docs.python.org/3/library/contextlib.html#contextlib.aclosing
-                        # https://docs.python.org/3/reference/expressions.html#asynchronous-generator-functions
                         async for item in agen:
                             yield item
                     break
                 except Exception as e:
-                    # exception captured are not specific to this code, we capture all exceptions of the program
-                    # logging.exception(e)
-
                     capture_exception = e
 
-                    if not item:  # the instanciation has failed
+                    if not item:
                         logging.exception(e)
 
                         if attempt + 1 == max_retries:
@@ -171,27 +162,24 @@ def reattempt(
                                 f"[RETRY] Attempt {attempt + 1}/{max_retries} failed, retrying in {format(wait_time, '.2f')} seconds..."
                             )
 
-                        attempt = attempt + 1
+                        attempt += 1
                         await asyncio.sleep(wait_time)
                     else:
                         should_retry = False
 
             if attempt == max_retries:
                 logging.error("[RETRY] Max retries reached")
+                raise capture_exception
 
-                if capture_exception:
-                    raise capture_exception
-
-            # for exceptions out of the scope of the gen
             if capture_exception and not should_retry:
                 raise capture_exception
 
         @functools.wraps(func)
-        def retry_sync_gen_func(*args, **kwargs):
+        def retry_sync_gen_func(*args: Any, **kwargs: Any) -> Generator[Any, None, None]:
             wait_time: float = min_time
             attempt: int = 0
             should_retry: bool = True
-            capture_exception: Exception | None = None
+            capture_exception: Optional[Exception] = None
 
             while should_retry and attempt < max_retries:
                 wait_time = random.uniform(wait_time, max_time)
@@ -205,7 +193,7 @@ def reattempt(
                 except Exception as e:
                     capture_exception = e
 
-                    if not item:  # the instantiation has failed
+                    if not item:
                         logging.exception(e)
 
                         if attempt + 1 == max_retries:
@@ -217,18 +205,15 @@ def reattempt(
                                 f"[RETRY] Attempt {attempt + 1}/{max_retries} failed, retrying in {format(wait_time, '.2f')} seconds..."
                             )
 
-                        attempt = attempt + 1
+                        attempt += 1
                         time.sleep(wait_time)
                     else:
                         should_retry = False
 
             if attempt == max_retries:
                 logging.error("[RETRY] Max retries reached")
+                raise capture_exception
 
-                if capture_exception:
-                    raise capture_exception
-
-            # for exceptions out of the scope of the gen
             if capture_exception and not should_retry:
                 raise capture_exception
 
