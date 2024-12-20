@@ -94,7 +94,7 @@ def reattempt(
                     attempt += 1
                     await asyncio.sleep(wait_time)
 
-            if attempt == max_retries and capture_exception:
+            if attempt == max_retries:
                 logging.error("[RETRY] Max retries reached")
                 raise capture_exception
 
@@ -125,7 +125,7 @@ def reattempt(
                     attempt += 1
                     time.sleep(wait_time)
 
-            if attempt == max_retries and capture_exception:
+            if attempt == max_retries:
                 logging.error("[RETRY] Max retries reached")
                 raise capture_exception
 
@@ -143,6 +143,7 @@ def reattempt(
                 try:
                     item = None
                     async with contextlib.aclosing(func(*args, **kwargs)) as agen:
+                        # https://docs.python.org/3/library/contextlib.html#contextlib.aclosing
                         async for item in agen:
                             yield item
                     break
@@ -166,7 +167,7 @@ def reattempt(
                     else:
                         should_retry = False
 
-            if attempt == max_retries and capture_exception:
+            if attempt == max_retries:
                 logging.error("[RETRY] Max retries reached")
                 raise capture_exception
 
@@ -209,7 +210,7 @@ def reattempt(
                     else:
                         should_retry = False
 
-            if attempt == max_retries and capture_exception:
+            if attempt == max_retries:
                 logging.error("[RETRY] Max retries reached")
                 raise capture_exception
 
