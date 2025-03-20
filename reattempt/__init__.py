@@ -42,13 +42,13 @@ def reattempt(
         The function to be decorated.
 
     max_retries : int, optional
-        The maximum number of times to retry the function upon failure. Default is 5.
+        The maximum number of times to retry the function upon failure. Default is CONST_DEFAULT_MAX_RETRIES.
 
     min_time : float, optional
-        The minimum time (in seconds) to wait before the first retry. Default is 0.1.
+        The minimum time (in seconds) to wait before the first retry. Default is CONST_DEFAULT_MIN_TIME.
 
     max_time : float, optional
-        The maximum time (in seconds) to wait between retries. Default is 0.2.
+        The maximum time (in seconds) to wait between retries. Default is CONST_DEFAULT_MAX_TIME.
 
     Returns:
     --------
