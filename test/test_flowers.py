@@ -9,7 +9,7 @@ flowers = ["Rose", "Tulip", "Sunflower", "Daisy", "Lily"]
 
 
 # Synchronous function example
-@reattempt
+@reattempt()
 def plant_flower():
     flower = random.choice(flowers)
     logging.info(f"Attempting to plant a {flower}")
@@ -19,7 +19,7 @@ def plant_flower():
 
 
 # Synchronous generator example
-@reattempt
+@reattempt()
 def grow_flowers():
     for _ in range(3):
         flower = random.choice(flowers)
@@ -30,7 +30,7 @@ def grow_flowers():
 
 
 # Asynchronous function example
-@reattempt
+@reattempt()
 async def water_flower():
     flower = random.choice(flowers)
     logging.info(f"Watering the {flower}")
@@ -41,7 +41,7 @@ async def water_flower():
 
 
 # Asynchronous generator function example
-@reattempt
+@reattempt()
 async def harvest_flowers():
     for _ in range(3):
         flower = random.choice(flowers)

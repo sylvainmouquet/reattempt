@@ -3,6 +3,7 @@ from test.conftest import MAX_ATTEMPTS, MIN_TIME, MAX_TIME
 import pytest
 import aiohttp
 
+URL:str = "https://httpbingo.org/status/{status}"
 
 @reattempt(max_retries=MAX_ATTEMPTS, min_time=MIN_TIME, max_time=MAX_TIME)
 async def async_aiohttp_call(status: int):
@@ -10,7 +11,7 @@ async def async_aiohttp_call(status: int):
 
     async with aiohttp.ClientSession() as session:
         async with session.get(
-            f"https://httpbin.org/status/{status}", ssl=False
+            URL.format(status=status), ssl=False
         ) as response:
             response.raise_for_status()
             return "OK"
