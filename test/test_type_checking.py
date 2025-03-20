@@ -3,7 +3,7 @@ from reattempt import reattempt
 from test.conftest import RetryException
 
 
-@reattempt
+@reattempt()
 def retry_function_without_parenthesis():
     retry_function_without_parenthesis.counter += 1  # type: ignore
     if retry_function_without_parenthesis.counter < 2:  # type: ignore

@@ -190,8 +190,8 @@ def reattempt(
             while should_retry and attempt < max_retries:
                 wait_time = random.uniform(wait_time, max_time)
 
+                item = None
                 try:
-                    item = None
                     with contextlib.closing(func(*args, **kwargs)) as agen:
                         for item in agen:
                             yield item
