@@ -87,7 +87,7 @@ def reattempt(
 
     def decorator(func: F) -> F:
         @functools.wraps(func)
-        async def retry_async_func(*args, **kwargs):
+        async def async_wrapper(*args, **kwargs):
             wait_time: float = min_time
             attempt: int = 0  # attempt: tentative
             # Capture the latest exception to raise it at the end
@@ -111,7 +111,7 @@ def reattempt(
                     raise capture_exception
 
         @functools.wraps(func)
-        def retry_sync_func(*args, **kwargs):
+        def sync_wrapper(*args, **kwargs):
             wait_time: float = min_time
             attempt: int = 0  # attempt: tentative
             # Capture the latest exception to raise it at the end
@@ -135,7 +135,7 @@ def reattempt(
                     raise capture_exception
 
         @functools.wraps(func)
-        async def retry_async_gen_func(*args, **kwargs):
+        async def async_gen_wrapper(*args, **kwargs):
             wait_time: float = min_time
 
             # Capture the latest exception to raise it at the end
@@ -181,7 +181,7 @@ def reattempt(
                 raise capture_exception
 
         @functools.wraps(func)
-        def retry_sync_gen_func(*args, **kwargs):
+        def sync_gen_wrapper(*args, **kwargs):
             wait_time: float = min_time
             attempt: int = 0
             should_retry: bool = True
@@ -217,14 +217,15 @@ def reattempt(
             if capture_exception and not should_retry:
                 raise capture_exception
 
+        # Determine the type of function and return the appropriate wrapper
         if inspect.iscoroutinefunction(func):
-            return retry_async_func
+            return cast(F, async_wrapper)
         elif inspect.isasyncgenfunction(func):
-            return retry_async_gen_func
+            return cast(F, async_gen_wrapper)
         elif inspect.isgeneratorfunction(func):
-            return retry_sync_gen_func
-        return retry_sync_func
+            return cast(F, sync_gen_wrapper)
+        return cast(F, sync_wrapper)
 
-    if func:
-        return decorator(func)
-    return decorator
+    if func is None:
+        return decorator
+    return decorator(func)
