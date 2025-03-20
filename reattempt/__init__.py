@@ -8,17 +8,24 @@ import inspect
 import logging
 import random
 import time
+from typing import Callable, TypeVar, Optional, Any, Union, cast
 
+# Type variables for better type hinting
+T = TypeVar('T')
+F = TypeVar('F', bound=Callable[..., Any])
+
+# Constants
 CONST_DEFAULT_MAX_RETRIES: int = 5
 CONST_DEFAULT_MIN_TIME: float = 0.1
 CONST_DEFAULT_MAX_TIME: float = 0.2
 
+# Setup logging
 logger = logging.getLogger("reattempt")
 logger.addHandler(logging.NullHandler())
 
 
 def reattempt(
-    func=None,
+    func: Optional[Callable[..., Any]] = None,
     max_retries: int = CONST_DEFAULT_MAX_RETRIES,
     min_time: float = CONST_DEFAULT_MIN_TIME,
     max_time: float = CONST_DEFAULT_MAX_TIME,
@@ -35,13 +42,13 @@ def reattempt(
         The function to be decorated.
 
     max_retries : int, optional
-        The maximum number of times to retry the function upon failure. Default is CONST_DEFAULT_MAX_RETRIES.
+        The maximum number of times to retry the function upon failure. Default is 5.
 
     min_time : float, optional
-        The minimum time (in seconds) to wait before the first retry. Default is CONST_DEFAULT_MIN_TIME.
+        The minimum time (in seconds) to wait before the first retry. Default is 0.1.
 
     max_time : float, optional
-        The maximum time (in seconds) to wait between retries. Default is CONST_DEFAULT_MAX_TIME.
+        The maximum time (in seconds) to wait between retries. Default is 0.2.
 
     Returns:
     --------
@@ -62,7 +69,23 @@ def reattempt(
     - If the function fails after the maximum number of retries, the last exception will be raised.
     """
 
-    def decorator(func):
+    # Helper functions for retry logic
+    def _get_wait_time(current_wait: float) -> float:
+        return random.uniform(current_wait, max_time)
+
+    def _log_attempt_failure(attempt: int, wait_time: float) -> None:
+        if attempt + 1 == max_retries:
+            logger.warning(f"[RETRY] Attempt {attempt + 1}/{max_retries} failed, stopping")
+        else:
+            logger.warning(
+                f"[RETRY] Attempt {attempt + 1}/{max_retries} failed, "
+                f"retrying in {format(wait_time, '.2f')} seconds..."
+            )
+
+    def _log_max_retries_reached() -> None:
+        logger.error("[RETRY] Max retries reached")
+
+    def decorator(func: F) -> F:
         @functools.wraps(func)
         async def retry_async_func(*args, **kwargs):
             wait_time: float = min_time
@@ -71,29 +94,19 @@ def reattempt(
             capture_exception: Exception | None = None
 
             while attempt < max_retries:
-                wait_time = random.uniform(wait_time, max_time)
+                wait_time = _get_wait_time(wait_time)
 
                 try:
                     return await func(*args, **kwargs)
                 except Exception as e:
                     logging.exception(e)
-
                     capture_exception = e
-
-                    if attempt + 1 == max_retries:
-                        logging.warning(
-                            f"[RETRY] Attempt {attempt + 1}/{max_retries} failed, stopping"
-                        )
-                    else:
-                        logging.warning(
-                            f"[RETRY] Attempt {attempt + 1}/{max_retries} failed, retrying in {format(wait_time, '.2f')} seconds..."
-                        )
-
+                    _log_attempt_failure(attempt, wait_time)
                     attempt += 1
                     await asyncio.sleep(wait_time)
 
             if attempt == max_retries:
-                logging.error("[RETRY] Max retries reached")
+                _log_max_retries_reached()
                 if capture_exception:
                     raise capture_exception
 
@@ -105,29 +118,19 @@ def reattempt(
             capture_exception: Exception | None = None
 
             while attempt < max_retries:
-                wait_time = random.uniform(wait_time, max_time)
+                wait_time = _get_wait_time(wait_time)
 
                 try:
                     return func(*args, **kwargs)
                 except Exception as e:
                     logging.exception(e)
-
                     capture_exception = e
-
-                    if attempt + 1 == max_retries:
-                        logging.warning(
-                            f"[RETRY] Attempt {attempt + 1}/{max_retries} failed, stopping"
-                        )
-                    else:
-                        logging.warning(
-                            f"[RETRY] Attempt {attempt + 1}/{max_retries} failed, retrying in {format(wait_time, '.2f')} seconds..."
-                        )
-
+                    _log_attempt_failure(attempt, wait_time)
                     attempt += 1
                     time.sleep(wait_time)
 
             if attempt == max_retries:
-                logging.error("[RETRY] Max retries reached")
+                _log_max_retries_reached()
                 if capture_exception:
                     raise capture_exception
 
@@ -143,7 +146,7 @@ def reattempt(
             item = None
 
             while should_retry and attempt < max_retries:
-                wait_time = random.uniform(wait_time, max_time)
+                wait_time = _get_wait_time(wait_time)
 
                 try:
                     item = None
@@ -161,23 +164,14 @@ def reattempt(
 
                     if not item:  # the instanciation has failed
                         logging.exception(e)
-
-                        if attempt + 1 == max_retries:
-                            logging.warning(
-                                f"[RETRY] Attempt {attempt + 1}/{max_retries} failed, stopping"
-                            )
-                        else:
-                            logging.warning(
-                                f"[RETRY] Attempt {attempt + 1}/{max_retries} failed, retrying in {format(wait_time, '.2f')} seconds..."
-                            )
-
+                        _log_attempt_failure(attempt, wait_time)
                         attempt = attempt + 1
                         await asyncio.sleep(wait_time)
                     else:
                         should_retry = False
 
             if attempt == max_retries:
-                logging.error("[RETRY] Max retries reached")
+                _log_max_retries_reached()
 
                 if capture_exception:
                     raise capture_exception
@@ -207,23 +201,14 @@ def reattempt(
 
                     if not item:  # the instantiation has failed
                         logging.exception(e)
-
-                        if attempt + 1 == max_retries:
-                            logging.warning(
-                                f"[RETRY] Attempt {attempt + 1}/{max_retries} failed, stopping"
-                            )
-                        else:
-                            logging.warning(
-                                f"[RETRY] Attempt {attempt + 1}/{max_retries} failed, retrying in {format(wait_time, '.2f')} seconds..."
-                            )
-
+                        _log_attempt_failure(attempt, wait_time)
                         attempt = attempt + 1
                         time.sleep(wait_time)
                     else:
                         should_retry = False
 
             if attempt == max_retries:
-                logging.error("[RETRY] Max retries reached")
+                _log_max_retries_reached()
 
                 if capture_exception:
                     raise capture_exception
