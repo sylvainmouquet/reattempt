@@ -1,3 +1,8 @@
+![license](https://img.shields.io/pypi/l/reattempt?style=for-the-badge) ![python version](https://img.shields.io/pypi/pyversions/reattempt?style=for-the-badge) [![version](https://img.shields.io/pypi/v/reattempt?style=for-the-badge)](https://pypi.org/project/reattempt/) [![](https://img.shields.io/pypi/dm/reattempt?style=for-the-badge)](https://pypi.org/project/reattempt/)
+
+
+# pydantic2-settings-vault
+
 # ReAttempt
 
 ReAttempt is a python decorator to retry a function when exceptions are raised.
